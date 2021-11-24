@@ -5,6 +5,35 @@
 
 <div class="container">
 
+
+  <!-- On va afficher ici la liste des villes
+On fait un CURL pour récupérer la liste des villes et ensuite on les insère dans un select
+-->
+
+  <?php
+
+  $curl = curl_init("https://geo.api.gouv.fr/communes");
+  curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+  $regions = curl_exec($curl);
+  if ($regions === false) {
+    echo "<pre>";
+    var_dump(curl_error($curl));
+    echo "</pre>";
+  } else {
+    $regions = json_decode($regions, true);
+ 
+    echo "<select name='ville'>";
+    echo "<option value='' disabled selected>Selectionnez une ville</option>";
+    foreach ($regions as $ligne) {
+      echo '<option value="'.$ligne['nom'].'">' . $ligne['code'] . ' - ' . $ligne['nom'] . '</li>';
+    }
+    echo "</select>";
+  }
+  curl_close($curl);
+  ?>
+
+
+  <!-- 
 <nav class="navbar navbar-expand-lg navbar-light my-4">
   <div class="container-fluid">
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -13,37 +42,33 @@
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="admin.php?page=footscore/includes/plugin_page.php&home">Home</a>
+          <a class="nav-link active" aria-current="page" href="admin.php?page=acs-weather/includes/plugin_page.php&home">Home</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="admin.php?page=footscore/includes/plugin_page.php&addmatch">Ajouter un match</a>
+          <a class="nav-link" href="admin.php?page=acs-weather/includes/plugin_page.php&addmatch">Ajouter un match</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="admin.php?page=footscore/includes/plugin_page.php&classement">Voir le classement</a>
+          <a class="nav-link" href="admin.php?page=acs-weather/includes/plugin_page.php&classement">Voir le classement</a>
         </li>
       
       </ul>
     </div>
   </div>
-</nav>
+</nav> -->
 
 
-<?php 
+  <?php
 
-if(isset($_GET['addmatch']))
-{
-include('add_match.php');
-}
-else if(isset($_GET['classement']))
-{
-  include('show_classement.php');
-}
-else
-{
-  echo "ici on ajoute les resultats";
-}
+  if (isset($_GET['addmatch'])) {
+    //include('add_match.php');
+    echo "Vous êtes ici";
+  } else if (isset($_GET['classement'])) {
+    include('show_classement.php');
+  } else {
+    echo "Bienvenue";
+  }
 
 
-?>
+  ?>
 
 </div>
