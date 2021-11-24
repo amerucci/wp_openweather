@@ -70,18 +70,12 @@ require_once  __DIR__ . '/../Models/Data.php';
   <div class="my-5 shadow p-3 mb-5 bg-white rounded">
     <h2>Générer un shortcode</h2>
     <?php
-    //$listedescommunes = new Data;
-    //$allcommunes = $listedescommunes->getAllCommunes();
-    // var_dump($listedescommunes);
     echo ' <div class="form-group">';
     echo '<label for="cpselect"><strong>Code Postal</strong></label>';
-    echo '<input list="comm" id="cpselect" name="commselected" class="form-control"/>';
+    echo '<input type="number" id="cpselect" name="commselected" class="form-control"/>';
     echo '<label for="commselect"><strong>Choisir une ville</strong></label>';
-    echo '<input list="comm" id="commselect" name="commselected" class="form-control"/>';
+    echo '<input list="comm" id="commselect" name="commselected" class="form-control" readonly placeholder = "Selectionnez une ville"/>';
     echo "<datalist id='comm'>";
-    // foreach ($allcommunes as $communes) {
-    //   echo '<option class="form-control" value="' . $communes['nom'] . '">';
-    // }
     echo '</datalist>';
 
     echo '<div class="input-group my-3">
@@ -130,6 +124,10 @@ require_once  __DIR__ . '/../Models/Data.php';
       let laliste = document.getElementById("comm")
       laliste.innerHTML=""
       document.getElementById("commselect").value = ""
+      document.getElementById("generatedShortcode").value = ""
+      document.getElementById("commselect").placeholder = "Selectionnez une ville"
+      document.getElementById("commselect").removeAttribute('readonly');
+
       let communeSelected = document.getElementById("cpselect").value
       let xmlhttp = new XMLHttpRequest();
       xmlhttp.onreadystatechange = function() {
