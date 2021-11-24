@@ -8,6 +8,8 @@ require_once  __DIR__ . '/../Models/Data.php';
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.min.js" integrity="sha384-nsg8ua9HAw1y0W1btsyWgBklPnCUAFLuTMS2G72MMONqmOymq585AcH49TLBQObG" crossorigin="anonymous"></script>
 
 
+
+
 <div class="container">
 http://localhost/acs-weather/wp-admin/admin.php?page=acs-weather%2Fincludes%2Fplugin_page.php
 http://localhost/acs-weather/wp-admin/admin.php?page=acs-weather%252Fincludes%252Fplugin_page.php&key=zzzzzz
@@ -16,15 +18,32 @@ http://localhost/acs-weather/wp-admin/admin.php?page=acs-weather%252Fincludes%25
   <div class="my-5 shadow-sm p-3 mb-5 bg-white rounded">
     <h2>Clé API</h2>
     <?php
+
+$apikey = new Data;
+$existentkey = $apikey->getApiKey();
+
+
+
+
+
     echo '<form action="">';
     echo '<input type="hidden" name="page" value="acs-weather/includes/plugin_page.php">';
     echo ' <div class="form-group">';
     echo '<div class="input-group my-3">
     <div class="input-group-prepend">
       <div class="input-group-text">Clé API</div>
-    </div>
-    <input type="text" class="form-control" id="apikey" name="key" placeholder="Entrez votre clé API">
-  </div>';
+    </div>';
+
+    if(is_null($existentkey )){
+      echo '<input type="text" class="form-control" id="apikey" name="key" placeholder="Entrez votre clé API">';
+    }else{
+      echo '<input type="text" class="form-control" id="apikey" name="key" value="'.$existentkey['option_value'].'" placeholder="Entrez votre clé API">';
+     
+    }
+
+
+   
+  echo '</div>';
     echo '</div>';
     echo '<small id="passwordHelpBlock" class="form-text text-muted">
    Pour générer une clé API rendez-vous sur le site https://openweathermap.org/. Créez un compte, puis par la suite rendez-vous dans l\onglet "My API keys".
@@ -118,9 +137,16 @@ http://localhost/acs-weather/wp-admin/admin.php?page=acs-weather%252Fincludes%25
   <?php
 
 
+
+
 if(isset($_GET['key'])){
     $apikey = new Data;
-    $apikey->setApiKey($_GET['key']);
+    $existentkey = $apikey->getApiKey();
+    print_r($existentkey);
+    echo $existentkey['option_value'];
+
+
+    //$apikey->setApiKey($_GET['key']);
 }
 
 

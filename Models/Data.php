@@ -18,8 +18,7 @@ class Data extends Database
                 );
                 $apik->bindParam (':option_value', $key); 
                 $apik->execute();
-                $apik->debugDumpParams();
-                die;
+             
            
         }
         
@@ -29,6 +28,15 @@ class Data extends Database
          * @return void
          */
         public function getApiKey(){
+                global $wpdb;
+                $apik = $this->connect()->prepare(
+                        'SELECT option_value FROM '.$wpdb->prefix.'options WHERE option_name="apikey"' 
+                );
+                $apik->execute();
+                //$apik->debugDumpParams();
+                $apikey = $apik->fetch();
+                
+                return $apikey;
                 
         }
 
