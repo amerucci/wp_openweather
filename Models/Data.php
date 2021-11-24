@@ -21,9 +21,20 @@ class Data extends Database
                 return $allDatas;
         }
 
-
+        
+        /**
+         * Get des informations d'une ville selectionnée
+         *
+         * @param  mixed $what
+         * @return void
+         */
         public function getWeatherOf($what){
-            return $what;
+            
+            $curl = curl_init("https://api.openweathermap.org/data/2.5/weather?q=".$what."&appid=22de69d47c753d7302c408802108fe0f&lang=fr&units=metric");
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+            $meteo = curl_exec($curl);
+            $meteo = json_decode($meteo, true);
+            return $meteo;
         }
                 
      

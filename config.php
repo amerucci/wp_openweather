@@ -8,14 +8,14 @@ Author: Alain MERUCCI
 Author URI: https://www.alainmerucci.fr
 */
 
-require_once  __DIR__ . '/Controllers/weatherController.php'; 
+require_once  __DIR__ . '/Controllers/weatherController.php';
 
 
 /*
  * Ajouter d'un nouveau menu à notre panel Admin
  */
 
- 
+
 // On attache l'action monLienAdmin à admin_menu
 add_action('admin_menu', 'lienAdmin');
 
@@ -35,36 +35,33 @@ function lienAdmin()
 function initialisationPlugin()
 {
 
-  
 
-      
-        //Création de la table dans la BDD
-        global $wpdb;
-        $servername = $wpdb->dbhost;
-        $username = $wpdb->dbuser;
-        $password = $wpdb->dbpassword;
-        $dbname = $wpdb->dbname;
-        $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
-        $sh = $conn->prepare( "DESCRIBE `weather`");
-        if ( !$sh->execute() ) {
-          $sql = "CREATE TABLE weather (
+
+
+    //Création de la table dans la BDD
+    global $wpdb;
+    $servername = $wpdb->dbhost;
+    $username = $wpdb->dbuser;
+    $password = $wpdb->dbpassword;
+    $dbname = $wpdb->dbname;
+    $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+    $sh = $conn->prepare("DESCRIBE `weather`");
+    if (!$sh->execute()) {
+        $sql = "CREATE TABLE weather (
             id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
             shortcode VARCHAR(30) NOT NULL
          )";
-        }
-           $sqlcommune = $conn->prepare( "DESCRIBE `communes`");
+    }
+    $sqlcommune = $conn->prepare("DESCRIBE `communes`");
 
-           if ( !$sqlcommune->execute() ) {
-             $sqlcommunes = "CREATE TABLE communes (
+    if (!$sqlcommune->execute()) {
+        $sqlcommunes = "CREATE TABLE communes (
                id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
                nom VARCHAR(30) NOT NULL
             )";
-            $conn->exec($sql);
-            $conn->exec($sqlcommunes);
-       
-
-           
-        } 
+        $conn->exec($sql);
+        $conn->exec($sqlcommunes);
+    }
 
     //On crée une page qui va contenir la météo détaillé
     $weather_arr = array(
@@ -78,24 +75,23 @@ function initialisationPlugin()
     wp_insert_post($weather_arr);
 
     //Hydratation des communes
-        $supprimer = $conn->prepare('Delete from communes');
-        $supprimer->execute();
-        $curl = curl_init("https://geo.api.gouv.fr/communes");
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        $communes = curl_exec($curl);
-        $communes = json_decode($communes, true);
-        foreach ($communes as $commune) {
-                $ajouter = $conn->prepare('INSERT INTO communes (nom) VALUES (:nom)');
-                $ajouter->bindParam(':nom', $commune['nom']);
-                $ajouter->execute();
-                $ajouter->debugDumpParams();
-        }
-        curl_close($curl);
+    $supprimer = $conn->prepare('Delete from communes');
+    $supprimer->execute();
+    $curl = curl_init("https://geo.api.gouv.fr/communes");
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+    $communes = curl_exec($curl);
+    $communes = json_decode($communes, true);
+    foreach ($communes as $commune) {
+        $ajouter = $conn->prepare('INSERT INTO communes (nom) VALUES (:nom)');
+        $ajouter->bindParam(':nom', $commune['nom']);
+        $ajouter->execute();
+        $ajouter->debugDumpParams();
+    }
+    curl_close($curl);
 
 
 
-$conn = null;
-
+    $conn = null;
 }
 register_activation_hook(__FILE__, 'initialisationPlugin');
 
@@ -110,10 +106,17 @@ function myplugin_deactivate()
 
 register_deactivation_hook(__FILE__, 'myplugin_deactivate');
 
-// Généation de la fonction pour traiter un shortcode en fonction d'une ville sélectionnée
-function shortcode_showWeather($ville){
+
+/**
+ * énéation de la fonction pour traiter un shortcode en fonction d'une ville sélectionnée
+ *
+ * @param  mixed $ville
+ * @return string
+ */
+function shortcode_showWeather($ville)
+{
     $s = isset($ville['ville']) ? $ville['ville'] : '';
     $view =  getWeather($s);
     return $view;
- }
- add_shortcode('meteo', 'shortcode_showWeather');
+}
+add_shortcode('meteo', 'shortcode_showWeather');
