@@ -1,3 +1,8 @@
+<?php 
+require_once  __DIR__ . '/../Models/Database.php';
+require_once  __DIR__ . '/../Models/Data.php';
+?>
+
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.6.0/dist/umd/popper.min.js" integrity="sha384-KsvD1yqQ1/1+IA7gi3P0tyJcT3vR+NdBTt13hSJ2lnve8agRGXTTyNaBYmCR/Nwi" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.min.js" integrity="sha384-nsg8ua9HAw1y0W1btsyWgBklPnCUAFLuTMS2G72MMONqmOymq585AcH49TLBQObG" crossorigin="anonymous"></script>
@@ -11,26 +16,19 @@ On fait un CURL pour récupérer la liste des villes et ensuite on les insère d
 -->
 
   <?php
-
-  $curl = curl_init("https://geo.api.gouv.fr/communes");
-  curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-  $regions = curl_exec($curl);
-  if ($regions === false) {
-    echo "<pre>";
-    var_dump(curl_error($curl));
-    echo "</pre>";
-  } else {
-    $regions = json_decode($regions, true);
- 
-    echo "<select name='ville'>";
-    echo "<option value='' disabled selected>Selectionnez une ville</option>";
-    foreach ($regions as $ligne) {
-      echo '<option value="'.$ligne['nom'].'">' . $ligne['code'] . ' - ' . $ligne['nom'] . '</li>';
+    $listedescommunes = new Data;
+    $allcommunes = $listedescommunes->getAllCommunes();
+   // var_dump($listedescommunes);
+  echo '<input list="comm" />';
+   echo "<datalist id='comm'>";
+    foreach($allcommunes as $communes){
+      echo '<option value="'.$communes['nom'].'">';
     }
-    echo "</select>";
-  }
-  curl_close($curl);
+  echo '</datalist>';
+
   ?>
+
+
 
 
   <!-- 

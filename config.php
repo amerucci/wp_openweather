@@ -78,11 +78,11 @@ function initialisationPlugin()
         $supprimer->execute();
         $curl = curl_init("https://geo.api.gouv.fr/communes");
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        $regions = curl_exec($curl);
-        $regions = json_decode($regions, true);
-        foreach ($regions as $region) {
+        $communes = curl_exec($curl);
+        $communes = json_decode($communes, true);
+        foreach ($communes as $commune) {
                 $ajouter = $conn->prepare('INSERT INTO communes (nom) VALUES (:nom)');
-                $ajouter->bindParam(':nom', $region['nom']);
+                $ajouter->bindParam(':nom', $commune['nom']);
                 $ajouter->execute();
                 $ajouter->debugDumpParams();
         }
