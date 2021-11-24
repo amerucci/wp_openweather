@@ -107,6 +107,9 @@ function myplugin_deactivate()
 register_deactivation_hook(__FILE__, 'myplugin_deactivate');
 
 
+
+
+
 /**
  * énéation de la fonction pour traiter un shortcode en fonction d'une ville sélectionnée
  *

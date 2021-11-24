@@ -9,6 +9,32 @@ require_once  __DIR__ . '/../Models/Data.php';
 
 
 <div class="container">
+http://localhost/acs-weather/wp-admin/admin.php?page=acs-weather%2Fincludes%2Fplugin_page.php
+http://localhost/acs-weather/wp-admin/admin.php?page=acs-weather%252Fincludes%252Fplugin_page.php&key=zzzzzz
+  <!-- Saisie de la clé d'API -->
+
+  <div class="my-5 shadow-sm p-3 mb-5 bg-white rounded">
+    <h2>Clé API</h2>
+    <?php
+    echo '<form action="">';
+    echo '<input type="hidden" name="page" value="acs-weather/includes/plugin_page.php">';
+    echo ' <div class="form-group">';
+    echo '<div class="input-group my-3">
+    <div class="input-group-prepend">
+      <div class="input-group-text">Clé API</div>
+    </div>
+    <input type="text" class="form-control" id="apikey" name="key" placeholder="Entrez votre clé API">
+  </div>';
+    echo '</div>';
+    echo '<small id="passwordHelpBlock" class="form-text text-muted">
+   Pour générer une clé API rendez-vous sur le site https://openweathermap.org/. Créez un compte, puis par la suite rendez-vous dans l\onglet "My API keys".
+  </small>';
+    echo "<div class='d-flex align-items-center'>";
+    echo '<button class="btn btn-primary float-left" id="save" title="" data-original-title="Copy to clipboard">Copier le Shortcode</button><div id="successtxt" class="px-3 "></div>';
+    echo "</div>";
+    echo '</form>';
+    ?>
+  </div>
 
 
   <!-- Génération du ShortColde-->
@@ -35,6 +61,7 @@ require_once  __DIR__ . '/../Models/Data.php';
     <input type="text" class="form-control" id="generatedShortcode" readonly placeholder="Votre shortcode à copier">
   </div>';
 
+ 
 
 
     echo "<div id='generatedShortcode'></div>";
@@ -45,24 +72,23 @@ require_once  __DIR__ . '/../Models/Data.php';
     ?>
   </div>
 
-<script>
+  <script>
+    document.getElementById("commselect").addEventListener('change', generateSchortcode);
 
-document.getElementById("commselect").addEventListener('change', generateSchortcode);
+    function generateSchortcode() {
+      document.getElementById("generatedShortcode").value = '[meteo ville="' + this.value + '"]';
 
-function generateSchortcode(){
-  document.getElementById("generatedShortcode").value = '[meteo ville="' + this.value + '"]';
+    }
 
-}
+    function copy() {
+      var copyText = document.querySelector("#generatedShortcode");
+      copyText.select();
+      document.execCommand("copy");
+      document.getElementById("successtxt").innerHTML = 'Le shortcode ' + document.getElementById("generatedShortcode").value + ' a bien été copié! '
+    }
 
-function copy() {
-  var copyText = document.querySelector("#generatedShortcode");
-  copyText.select();
-  document.execCommand("copy");
-  document.getElementById("successtxt").innerHTML = 'Le shortcode '+document.getElementById("generatedShortcode").value  +' a bien été copié! '
-}
-
-document.querySelector("#copy").addEventListener("click", copy);
-</script>
+    document.querySelector("#copy").addEventListener("click", copy);
+  </script>
 
 
   <!-- 
@@ -90,6 +116,13 @@ document.querySelector("#copy").addEventListener("click", copy);
 
 
   <?php
+
+
+if(isset($_GET['key'])){
+    $apikey = new Data;
+    $apikey->setApiKey($_GET['key']);
+}
+
 
   if (isset($_GET['addmatch'])) {
     //include('add_match.php');
