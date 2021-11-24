@@ -57,6 +57,7 @@ function initialisationPlugin()
     if (!$sqlcommune->execute()) {
         $sqlcommunes = "CREATE TABLE communes (
                id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+               code INT(6) NOT NULL,
                nom VARCHAR(30) NOT NULL
             )";
         $conn->exec($sql);
@@ -82,7 +83,9 @@ function initialisationPlugin()
     $communes = curl_exec($curl);
     $communes = json_decode($communes, true);
     foreach ($communes as $commune) {
-        $ajouter = $conn->prepare('INSERT INTO communes (nom) VALUES (:nom)');
+        $cp = implode(",", $commune['codesPostaux']);
+        $ajouter = $conn->prepare('INSERT INTO communes (code, nom) VALUES (:code, :nom)');
+        $ajouter->bindParam(':code', $cp);
         $ajouter->bindParam(':nom', $commune['nom']);
         $ajouter->execute();
         $ajouter->debugDumpParams();

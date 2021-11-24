@@ -14,12 +14,12 @@ require_once  __DIR__ . '/../Models/Data.php';
 
   <!-- Saisie de la clé d'API -->
 
-  <div class="my-5 shadow-sm p-3 mb-5 bg-white rounded">
+  <div class="my-5 shadow p-3 mb-5 bg-white rounded">
     <h2>Clé API</h2>
     <?php
 
-$apikey = new Data;
-$existentkey = $apikey->getApiKey();
+    $apikey = new Data;
+    $existentkey = $apikey->getApiKey();
 
 
 
@@ -28,33 +28,32 @@ $existentkey = $apikey->getApiKey();
     echo '<form action="">';
     echo '<input type="hidden" name="page" value="acs-weather/includes/plugin_page.php">';
     echo ' <div class="form-group">';
+    echo '<small id="passwordHelpBlock" class="form-text text-muted">
+   Pour générer une clé API rendez-vous sur le site <a href="https://openweathermap.org/" target="blank">OpenWeather</a>.<br/>Créez un compte, puis par la suite rendez-vous dans l\'onglet "My API keys".
+  </small>';
     echo '<div class="input-group my-3">
     <div class="input-group-prepend">
       <div class="input-group-text">Clé API</div>
     </div>';
 
-    if($existentkey==""){
+    if ($existentkey == "") {
       echo '<input type="text" class="form-control" id="apikey" name="key" placeholder="Entrez votre clé API">';
-    }else{
-      echo '<input type="text" class="form-control" id="apikey" name="key" value="'.$existentkey['option_value'].'" placeholder="Entrez votre clé API">';
-     
+    } else {
+      echo '<input type="text" class="form-control" id="apikey" name="key" value="' . $existentkey['option_value'] . '" placeholder="Entrez votre clé API">';
     }
 
 
-   
-  echo '</div>';
+
     echo '</div>';
-    echo '<small id="passwordHelpBlock" class="form-text text-muted">
-   Pour générer une clé API rendez-vous sur le site https://openweathermap.org/. Créez un compte, puis par la suite rendez-vous dans l\onglet "My API keys".
-  </small>';
+    echo '</div>';
+
     echo "<div class='d-flex align-items-center'>";
 
 
-    if($existentkey==""){
+    if ($existentkey == "") {
       echo '<button class="btn btn-primary id="save" name="save">Enregistrer la clé d\'API</button>';
-    }else{
+    } else {
       echo '<button class="btn btn-primary id="update" name="update">Mettre à jour la clé d\'API</button>';
-     
     }
 
 
@@ -68,19 +67,21 @@ $existentkey = $apikey->getApiKey();
 
   <!-- Génération du ShortColde-->
 
-  <div class="my-5 shadow-sm p-3 mb-5 bg-white rounded">
+  <div class="my-5 shadow p-3 mb-5 bg-white rounded">
     <h2>Générer un shortcode</h2>
     <?php
-    $listedescommunes = new Data;
-    $allcommunes = $listedescommunes->getAllCommunes();
+    //$listedescommunes = new Data;
+    //$allcommunes = $listedescommunes->getAllCommunes();
     // var_dump($listedescommunes);
     echo ' <div class="form-group">';
+    echo '<label for="cpselect"><strong>Code Postal</strong></label>';
+    echo '<input list="comm" id="cpselect" name="commselected" class="form-control"/>';
     echo '<label for="commselect"><strong>Choisir une ville</strong></label>';
     echo '<input list="comm" id="commselect" name="commselected" class="form-control"/>';
     echo "<datalist id='comm'>";
-    foreach ($allcommunes as $communes) {
-      echo '<option class="form-control" value="' . $communes['nom'] . '">';
-    }
+    // foreach ($allcommunes as $communes) {
+    //   echo '<option class="form-control" value="' . $communes['nom'] . '">';
+    // }
     echo '</datalist>';
 
     echo '<div class="input-group my-3">
@@ -90,7 +91,7 @@ $existentkey = $apikey->getApiKey();
     <input type="text" class="form-control" id="generatedShortcode" readonly placeholder="Votre shortcode à copier">
   </div>';
 
- 
+
 
 
     echo "<div id='generatedShortcode'></div>";
@@ -103,6 +104,7 @@ $existentkey = $apikey->getApiKey();
 
   <script>
     document.getElementById("commselect").addEventListener('change', generateSchortcode);
+    document.getElementById("cpselect").addEventListener('change', afficherLesCommunes);
 
     function generateSchortcode() {
       document.getElementById("generatedShortcode").value = '[meteo ville="' + this.value + '"]';
@@ -114,6 +116,44 @@ $existentkey = $apikey->getApiKey();
       copyText.select();
       document.execCommand("copy");
       document.getElementById("successtxt").innerHTML = 'Le shortcode ' + document.getElementById("generatedShortcode").value + ' a bien été copié! '
+    }
+
+    function afficherLesCommunes() {
+
+      var beforeSend = function() {
+        document.getElementById("commselect").value = "Chargement en cours"
+      }
+
+
+
+
+      let laliste = document.getElementById("comm")
+      laliste.innerHTML=""
+      document.getElementById("commselect").value = ""
+      let communeSelected = document.getElementById("cpselect").value
+      let xmlhttp = new XMLHttpRequest();
+      xmlhttp.onreadystatechange = function() {
+
+        if (xmlhttp.readyState < 4) {
+          beforeSend();
+        }
+
+        if (this.readyState == 4 && this.status == 200) {
+          document.getElementById("commselect").value = ""
+          var communess = JSON.parse(this.response)
+
+
+
+          for (let i = 0; i < communess.length; i++) {
+            console.log(communess[i][0])
+            laliste.innerHTML += '<option class="form-control" value="' + communess[i].nom + '">'
+          }
+        }
+      }
+      xmlhttp.open("GET", "../wp-content/plugins/acs-weather/includes/search.php?cp=" + communeSelected)
+
+      xmlhttp.send()
+
     }
 
     document.querySelector("#copy").addEventListener("click", copy);
@@ -149,14 +189,13 @@ $existentkey = $apikey->getApiKey();
 
 
 
-if(isset($_GET['key']) && isset($_GET['save']) ){
+  if (isset($_GET['key']) && isset($_GET['save'])) {
     $apikey->setApiKey($_GET['key']);
-}
+  }
 
-if(isset($_GET['key']) && isset($_GET['update']) ){
-  $apikey->updateApiKey($existentkey['option_id'], $_GET['key']);
-  
-}
+  if (isset($_GET['key']) && isset($_GET['update'])) {
+    $apikey->updateApiKey($existentkey['option_id'], $_GET['key']);
+  }
 
 
   if (isset($_GET['addmatch'])) {
