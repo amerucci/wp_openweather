@@ -5,7 +5,13 @@ require_once 'Database.php';
 
 class Data extends Database
 {
-                
+            
+        public function redir() {
+                echo '<script language="JavaScript">
+                      setTimeout("window.location=./acs-weather/includes/plugin_page.php"); 
+                      </script>';
+              }
+
         /**
          * Enregistrer la clé API dans la base de données
          *
@@ -18,6 +24,30 @@ class Data extends Database
                 );
                 $apik->bindParam (':option_value', $key); 
                 $apik->execute();
+                //$apik->debugDumpParams();
+                $this->redir();
+             
+           
+        }
+
+        
+        /**
+         * Mettre à jour la clé API
+         *
+         * @param  mixed $value
+         * @param  mixed $key
+         * @return void
+         */
+        public function updateApiKey($id, $valeur){
+                global $wpdb;
+
+                
+                $apik = $this->connect()->prepare('UPDATE '.$wpdb->prefix.'options SET option_value = :option_value WHERE option_id = :id');
+                $apik->bindParam (':id', $id); 
+                $apik->bindParam (':option_value', $valeur); 
+                $apik->execute();
+                //$apik->debugDumpParams();
+                $this->redir();
              
            
         }
@@ -30,7 +60,7 @@ class Data extends Database
         public function getApiKey(){
                 global $wpdb;
                 $apik = $this->connect()->prepare(
-                        'SELECT option_value FROM '.$wpdb->prefix.'options WHERE option_name="apikey"' 
+                        'SELECT * FROM '.$wpdb->prefix.'options WHERE option_name="apikey"' 
                 );
                 $apik->execute();
                 //$apik->debugDumpParams();
@@ -54,6 +84,7 @@ class Data extends Database
                 $allDatas = $datas->fetchAll();
                 //var_dump($allDatas);
                 return $allDatas;
+                
         }
 
         

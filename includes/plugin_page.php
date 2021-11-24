@@ -11,8 +11,7 @@ require_once  __DIR__ . '/../Models/Data.php';
 
 
 <div class="container">
-http://localhost/acs-weather/wp-admin/admin.php?page=acs-weather%2Fincludes%2Fplugin_page.php
-http://localhost/acs-weather/wp-admin/admin.php?page=acs-weather%252Fincludes%252Fplugin_page.php&key=zzzzzz
+
   <!-- Saisie de la clé d'API -->
 
   <div class="my-5 shadow-sm p-3 mb-5 bg-white rounded">
@@ -34,7 +33,7 @@ $existentkey = $apikey->getApiKey();
       <div class="input-group-text">Clé API</div>
     </div>';
 
-    if(is_null($existentkey )){
+    if($existentkey==""){
       echo '<input type="text" class="form-control" id="apikey" name="key" placeholder="Entrez votre clé API">';
     }else{
       echo '<input type="text" class="form-control" id="apikey" name="key" value="'.$existentkey['option_value'].'" placeholder="Entrez votre clé API">';
@@ -49,7 +48,18 @@ $existentkey = $apikey->getApiKey();
    Pour générer une clé API rendez-vous sur le site https://openweathermap.org/. Créez un compte, puis par la suite rendez-vous dans l\onglet "My API keys".
   </small>';
     echo "<div class='d-flex align-items-center'>";
-    echo '<button class="btn btn-primary float-left" id="save" title="" data-original-title="Copy to clipboard">Copier le Shortcode</button><div id="successtxt" class="px-3 "></div>';
+
+
+    if($existentkey==""){
+      echo '<button class="btn btn-primary id="save" name="save">Enregistrer la clé d\'API</button>';
+    }else{
+      echo '<button class="btn btn-primary id="update" name="update">Mettre à jour la clé d\'API</button>';
+     
+    }
+
+
+
+
     echo "</div>";
     echo '</form>';
     ?>
@@ -139,14 +149,13 @@ $existentkey = $apikey->getApiKey();
 
 
 
-if(isset($_GET['key'])){
-    $apikey = new Data;
-    $existentkey = $apikey->getApiKey();
-    print_r($existentkey);
-    echo $existentkey['option_value'];
+if(isset($_GET['key']) && isset($_GET['save']) ){
+    $apikey->setApiKey($_GET['key']);
+}
 
-
-    //$apikey->setApiKey($_GET['key']);
+if(isset($_GET['key']) && isset($_GET['update']) ){
+  $apikey->updateApiKey($existentkey['option_id'], $_GET['key']);
+  
 }
 
 
