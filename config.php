@@ -30,6 +30,10 @@ function lienAdmin()
 //Ici nous avons une fonction qui va ajouter une page si le plugin est activé
 function initialisationPlugin()
 {
+
+  
+
+      
         //Création de la table dans la BDD
         global $wpdb;
         $servername = $wpdb->dbhost;
@@ -43,9 +47,19 @@ function initialisationPlugin()
             id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
             shortcode VARCHAR(30) NOT NULL
          )";
+        }
+           $sqlcommune = $conn->prepare( "DESCRIBE `communes`");
+
+           if ( !$sqlcommune->execute() ) {
+             $sqlcommunes = "CREATE TABLE communes (
+               id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+               nom VARCHAR(30) NOT NULL
+            )";
             $conn->exec($sql);
-            $conn = null;
-        
+            $conn->exec($sqlcommunes);
+       
+
+           
         } 
 
     //On crée une page qui va contenir la météo détaillé
@@ -59,6 +73,24 @@ function initialisationPlugin()
 
     wp_insert_post($weather_arr);
 
+    //Hydratation des communes
+        $supprimer = $conn->prepare('Delete from communes');
+        $supprimer->execute();
+        $curl = curl_init("https://geo.api.gouv.fr/communes");
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        $regions = curl_exec($curl);
+        $regions = json_decode($regions, true);
+        foreach ($regions as $region) {
+                $ajouter = $conn->prepare('INSERT INTO communes (nom) VALUES (:nom)');
+                $ajouter->bindParam(':nom', $region['nom']);
+                $ajouter->execute();
+                $ajouter->debugDumpParams();
+        }
+        curl_close($curl);
+
+
+
+$conn = null;
 
 }
 register_activation_hook(__FILE__, 'initialisationPlugin');
