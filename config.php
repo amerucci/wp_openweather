@@ -8,10 +8,14 @@ Author: Alain MERUCCI
 Author URI: https://www.alainmerucci.fr
 */
 
+require_once  __DIR__ . '/Controllers/weatherController.php'; 
+
+
 /*
  * Ajouter d'un nouveau menu à notre panel Admin
  */
 
+ 
 // On attache l'action monLienAdmin à admin_menu
 add_action('admin_menu', 'lienAdmin');
 
@@ -105,3 +109,11 @@ function myplugin_deactivate()
 
 
 register_deactivation_hook(__FILE__, 'myplugin_deactivate');
+
+// Généation de la fonction pour traiter un shortcode en fonction d'une ville sélectionnée
+function shortcode_showWeather($ville){
+    $s = isset($ville['ville']) ? $ville['ville'] : '';
+    $view =  getWeather($s);
+    return $view;
+ }
+ add_shortcode('meteo', 'shortcode_showWeather');

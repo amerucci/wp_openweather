@@ -1,4 +1,4 @@
-<?php 
+<?php
 require_once  __DIR__ . '/../Models/Database.php';
 require_once  __DIR__ . '/../Models/Data.php';
 ?>
@@ -11,24 +11,58 @@ require_once  __DIR__ . '/../Models/Data.php';
 <div class="container">
 
 
-  <!-- On va afficher ici la liste des villes
-On fait un CURL pour récupérer la liste des villes et ensuite on les insère dans un select
--->
+  <!-- Génération du ShortColde-->
 
-  <?php
+  <div class="my-5 shadow-sm p-3 mb-5 bg-white rounded">
+    <h2>Générer un shortcode</h2>
+    <?php
     $listedescommunes = new Data;
     $allcommunes = $listedescommunes->getAllCommunes();
-   // var_dump($listedescommunes);
-  echo '<input list="comm" />';
-   echo "<datalist id='comm'>";
-    foreach($allcommunes as $communes){
-      echo '<option value="'.$communes['nom'].'">';
+    // var_dump($listedescommunes);
+    echo ' <div class="form-group">';
+    echo '<label for="commselect"><strong>Choisir une ville</strong></label>';
+    echo '<input list="comm" id="commselect" name="commselected" class="form-control"/>';
+    echo "<datalist id='comm'>";
+    foreach ($allcommunes as $communes) {
+      echo '<option class="form-control" value="' . $communes['nom'] . '">';
     }
-  echo '</datalist>';
+    echo '</datalist>';
 
-  ?>
+    echo '<div class="input-group my-3">
+    <div class="input-group-prepend">
+      <div class="input-group-text">Shortcode</div>
+    </div>
+    <input type="text" class="form-control" id="generatedShortcode" readonly placeholder="Votre shortcode à copier">
+  </div>';
 
 
+
+    echo "<div id='generatedShortcode'></div>";
+    echo '</div>';
+    echo "<div class='d-flex align-items-center'>";
+    echo '<button class="btn btn-primary float-left" id="copy" title="" data-original-title="Copy to clipboard">Copier le Shortcode</button><div id="successtxt" class="px-3 "></div>';
+    echo "</div>";
+    ?>
+  </div>
+
+<script>
+
+document.getElementById("commselect").addEventListener('change', generateSchortcode);
+
+function generateSchortcode(){
+  document.getElementById("generatedShortcode").value = '[meteo ville="' + this.value + '"]';
+
+}
+
+function copy() {
+  var copyText = document.querySelector("#generatedShortcode");
+  copyText.select();
+  document.execCommand("copy");
+  document.getElementById("successtxt").innerHTML = 'Le shortcode '+document.getElementById("generatedShortcode").value  +' a bien été copié! '
+}
+
+document.querySelector("#copy").addEventListener("click", copy);
+</script>
 
 
   <!-- 

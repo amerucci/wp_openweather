@@ -1,5 +1,8 @@
 <?php
 
+require_once 'Database.php';
+
+
 class Data extends Database
 {
         
@@ -18,6 +21,10 @@ class Data extends Database
                 return $allDatas;
         }
 
+
+        public function getWeatherOf($what){
+            return $what;
+        }
                 
      
 }
