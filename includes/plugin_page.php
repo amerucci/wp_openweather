@@ -96,6 +96,38 @@ require_once  __DIR__ . '/../Models/Data.php';
     ?>
   </div>
 
+    <!-- GESTION DE LA PAGE METEO -->
+
+    <div class="my-5 shadow p-3 mb-5 bg-white rounded">
+    <h2>Gestion de la page météo</h2>
+    <?php
+    echo ' <div class="form-group">';
+    echo '<label for="cpselect"><strong>Code Postal</strong></label>';
+    echo '<input type="number" id="cpselect" name="commselected" class="form-control"/>';
+    echo '<label for="commselect"><strong>Choisir une ville</strong></label>';
+    echo '<input list="comm" id="commselect" name="commselected" class="form-control" readonly placeholder = "Selectionnez une ville"/>';
+    echo "<datalist id='comm'>";
+    echo '</datalist>';
+
+    echo '<div class="input-group my-3">
+    <div class="input-group-prepend">
+      <div class="input-group-text">Shortcode</div>
+    </div>
+    <input type="text" class="form-control" id="generatedShortcode" readonly placeholder="Votre shortcode à copier">
+  </div>';
+
+
+
+
+    echo "<div id='generatedShortcode'></div>";
+    echo '</div>';
+    echo "<div class='d-flex align-items-center'>";
+    echo '<button class="btn btn-primary float-left" id="copy" title="" data-original-title="Copy to clipboard">Copier le Shortcode</button><div id="successtxt" class="px-3 "></div>';
+    echo "</div>";
+    ?>
+  </div>
+
+
   <script>
     document.getElementById("commselect").addEventListener('change', generateSchortcode);
     document.getElementById("cpselect").addEventListener('change', afficherLesCommunes);
