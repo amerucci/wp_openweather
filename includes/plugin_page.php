@@ -134,13 +134,13 @@ require_once  __DIR__ . '/../Models/Data.php';
 
     </small>
     <?php
- echo ' <div class="form-group">';
- echo '<label for="cpselect2"><strong>Code Postal</strong></label>';
- echo '<input type="number" id="cpselect2" name="commselected" class="form-control"/>';
- echo '<label for="commselect2"><strong>Choisir une ville</strong></label>';
- echo '<input list="comm2" id="commselect2" name="commselected" class="form-control" readonly placeholder = "Selectionnez une ville"/>';
- echo "<datalist id='comm2'>";
- echo '</datalist>';
+    echo ' <div class="form-group">';
+    echo '<label for="cpselect2"><strong>Code Postal</strong></label>';
+    echo '<input type="number" id="cpselect2" name="commselected" class="form-control"/>';
+    echo '<label for="commselect2"><strong>Choisir une ville</strong></label>';
+    echo '<input list="comm2" id="commselect2" name="commselected" class="form-control" readonly placeholder = "Selectionnez une ville"/>';
+    echo "<datalist id='comm2'>";
+    echo '</datalist>';
 
 
     echo ' <div class="form-group">';
@@ -221,7 +221,7 @@ require_once  __DIR__ . '/../Models/Data.php';
     echo '<input type="text" id="rendufinal" class="form-control" name="rendufinal" readonly>';
     echo '<button class="btn btn-primary id="save" name="savereglage">Sauvegarder les réglages</button>';
     echo '</form>';
- 
+
 
     echo "</div>";
     ?>
@@ -231,26 +231,36 @@ require_once  __DIR__ . '/../Models/Data.php';
   <script>
     document.getElementById("commselect").addEventListener('change', generateSchortcode);
     document.getElementById("commselect").addEventListener('change', generateVille);
-    document.getElementById("commselect2").addEventListener('change', generateVille);
+    document.getElementById("commselect2").addEventListener('change', generateVille2);
     document.getElementById("cpselect").addEventListener('change', afficherLesCommunes);
     document.getElementById("cpselect2").addEventListener('change', afficherLesCommunes2);
+    let rendu = document.getElementById("rendufinal")
+    let ville
+    let ville2
 
     function generateSchortcode() {
       document.getElementById("generatedShortcode").value = '[meteo ville="' + this.value + '"]';
 
 
     }
-    let ville
 
-    
     function generateVille() {
       ville = this.value;
-      console.log(this.value)
 
     }
 
- 
+    function generateVille2() {
+      ville2 = this.value;
+      rendu.value = 
+      rendu.value = '[pagemeteo ville="'+this.value+'"]'
 
+    }
+    
+    /**
+     * Copier le shortCode dans le press papier
+     *
+     * @return void
+     */
     function copy() {
       var copyText = document.querySelector("#generatedShortcode");
       copyText.select();
@@ -293,6 +303,7 @@ require_once  __DIR__ . '/../Models/Data.php';
         document.getElementById("commselect2").value = "Chargement en cours"
       }
       let laliste = document.getElementById("comm2")
+
       laliste.innerHTML = ""
       document.getElementById("commselect2").value = ""
       document.getElementById("generatedShortcode").value = ""
@@ -325,48 +336,38 @@ require_once  __DIR__ . '/../Models/Data.php';
     //Gestion des paramètres d'affichage de la page météo
 
     let lesparams = []
-    rendu = document.getElementById("rendufinal")
-    let inputs = document.querySelectorAll(".form-check-input");
-    for (let i = 0; i < inputs.length; i++) {
-      inputs[i].addEventListener('change', function() {
 
-        if (inputs[i].checked == true) {
-          lesparams.push(inputs[i].value);
-          generateMeteo()
-         
-        } else {
-          if(lesparams.indexOf(inputs[i].value) !== -1){
-            let position = lesparams.indexOf(inputs[i].value)
-            lesparams.splice(position,1)
-            generateMeteo()
-          }
-          else{
-            generateMeteo()
-          }
-          
-        }
+    //let inputs = document.querySelectorAll(".form-check-input");
+    // for (let i = 0; i < inputs.length; i++) {
+    //   inputs[i].addEventListener('change', function() {
 
-        function generateMeteo() {
-          
-          output = lesparams.join(' ')
-          rendu.value = "[ pagemeteo ville='"+ville+"' "+output+" ]"
-        }
-        
-       // console.log(lesparams)
+    //     if (inputs[i].checked == true) {
+    //       lesparams.push(inputs[i].value);
+    //       generateMeteo()
 
-      })
+    //     } else {
+    //       if(lesparams.indexOf(inputs[i].value) !== -1){
+    //         let position = lesparams.indexOf(inputs[i].value)
+    //         lesparams.splice(position,1)
+    //         generateMeteo()
+    //       }
+    //       else{
+    //         generateMeteo()
+    //       }
 
-    }
+    //     }
 
+    //     function generateMeteo() {
 
+    //       output = lesparams.join(' ')
+    //       rendu.value = "[pagemeteo ville='"+ville+"' "+output+"]"
+    //     }
 
+    //    // console.log(lesparams)
 
+    //   })
 
-
-
-
-
-    let params = [ressenti => "", min => "", max => "", humidite => "", nebulosite => "", vitesse => "", visibility => "", precipitation => ""]
+    // }
   </script>
 
 
@@ -387,8 +388,10 @@ require_once  __DIR__ . '/../Models/Data.php';
   }
 
   if (isset($_GET['savereglage']) && isset($_GET['rendufinal'])) {
-    $rendunormalized = str_replace("\'", "\"", $_GET['rendufinal']);
-    echo $rendunormalized;
+    //echo $_GET['rendufinal'];
+    $rendunormalized = str_replace('\"', '"', $_GET['rendufinal']);
+    //echo $rendunormalized;
+
     $apikey->setMeteoArgs($rendunormalized);
   }
 
