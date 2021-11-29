@@ -134,6 +134,15 @@ require_once  __DIR__ . '/../Models/Data.php';
 
     </small>
     <?php
+ echo ' <div class="form-group">';
+ echo '<label for="cpselect2"><strong>Code Postal</strong></label>';
+ echo '<input type="number" id="cpselect2" name="commselected" class="form-control"/>';
+ echo '<label for="commselect2"><strong>Choisir une ville</strong></label>';
+ echo '<input list="comm2" id="commselect2" name="commselected" class="form-control" readonly placeholder = "Selectionnez une ville"/>';
+ echo "<datalist id='comm2'>";
+ echo '</datalist>';
+
+
     echo ' <div class="form-group">';
     echo '<div class="row">';
     echo '<div class="col-12 col-md-6">';
@@ -222,7 +231,9 @@ require_once  __DIR__ . '/../Models/Data.php';
   <script>
     document.getElementById("commselect").addEventListener('change', generateSchortcode);
     document.getElementById("commselect").addEventListener('change', generateVille);
+    document.getElementById("commselect2").addEventListener('change', generateVille);
     document.getElementById("cpselect").addEventListener('change', afficherLesCommunes);
+    document.getElementById("cpselect2").addEventListener('change', afficherLesCommunes2);
 
     function generateSchortcode() {
       document.getElementById("generatedShortcode").value = '[meteo ville="' + this.value + '"]';
@@ -275,6 +286,38 @@ require_once  __DIR__ . '/../Models/Data.php';
       xmlhttp.open("GET", "../wp-content/plugins/acs-weather/includes/search.php?cp=" + communeSelected)
       xmlhttp.send()
     }
+
+
+    function afficherLesCommunes2() {
+      let beforeSend = function() {
+        document.getElementById("commselect2").value = "Chargement en cours"
+      }
+      let laliste = document.getElementById("comm2")
+      laliste.innerHTML = ""
+      document.getElementById("commselect2").value = ""
+      document.getElementById("generatedShortcode").value = ""
+      document.getElementById("commselect2").placeholder = "Selectionnez une ville"
+      document.getElementById("commselect2").removeAttribute('readonly');
+      let communeSelected = document.getElementById("cpselect2").value
+      let xmlhttp = new XMLHttpRequest();
+      xmlhttp.onreadystatechange = function() {
+        if (xmlhttp.readyState < 4) {
+          beforeSend();
+        }
+        if (this.readyState == 4 && this.status == 200) {
+          document.getElementById("commselect2").value = ""
+          let communess = JSON.parse(this.response)
+          for (let i = 0; i < communess.length; i++) {
+            console.log(communess[i][0])
+            laliste.innerHTML += '<option class="form-control" value="' + communess[i].nom + '">'
+          }
+        }
+      }
+      xmlhttp.open("GET", "../wp-content/plugins/acs-weather/includes/search.php?cp=" + communeSelected)
+      xmlhttp.send()
+    }
+
+
     document.querySelector("#copy").addEventListener("click", copy);
 
 
