@@ -20,12 +20,22 @@ class Data extends Database
          * @param  mixed $string
          * @return void
          */
-        public function setMeteoArgs($string)
+        public function setMeteoArgs($string, $args)
         {
+                $arguments = implode(",", $args);
+                $bind = join(',', array_fill(0, count($args), '"YES"'));
+
+
+
+               
+
+
                 $apik = $this->connect()->prepare(
-                        'INSERT INTO weather (shortcode) VALUES (:string)'
+                        'INSERT INTO weather (shortcode, '.$arguments.') VALUES (:string, '.$bind.')'
                 );
                 $apik->bindParam(':string', $string);
+                $apik->debugDumpParams();
+        
                 $apik->execute();
                 $this->redir();
         }
