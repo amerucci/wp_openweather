@@ -49,7 +49,15 @@ function initialisationPlugin()
     if (!$sh->execute()) {
         $sql = "CREATE TABLE weather (
             id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-            shortcode VARCHAR(30) NOT NULL
+            shortcode VARCHAR(30) NOT NULL,
+            ressenti VARCHAR(30) NULL,
+            tempmin VARCHAR(30) NULL,
+            tempmax VARCHAR(30) NULL,
+            humidite VARCHAR(30) NULL,
+            nebulosite VARCHAR(30) NULL,
+            vitessevent VARCHAR(30) NULL,
+            visibilite VARCHAR(30) NULL,
+            pecipitation VARCHAR(30) NULL
          )";
     }
     $sqlcommune = $conn->prepare("DESCRIBE `communes`");
@@ -137,17 +145,6 @@ add_shortcode('meteo', 'shortcode_showWeather');
 function shortcode_showWeatherPage($ville, $ressenti)
 {
     $s = isset($ville['ville']) ? $ville['ville'] : '';
-    
-    $ressenti = isset($ressenti['ressenti']) ? 'YES' : '';
-    echo $ressenti;
-    $s = isset($ville['ville']) ? $ville['ville'] : '';
-    $s = isset($ville['ville']) ? $ville['ville'] : '';
-    $s = isset($ville['ville']) ? $ville['ville'] : '';
-    $s = isset($ville['ville']) ? $ville['ville'] : '';
-    $s = isset($ville['ville']) ? $ville['ville'] : '';
-    $s = isset($ville['ville']) ? $ville['ville'] : '';
-    $s = isset($ville['ville']) ? $ville['ville'] : '';
-
     $views =  getWeatherPage($s, $ressenti);
     return $views;
    

@@ -142,13 +142,15 @@ require_once  __DIR__ . '/../Models/Data.php';
     echo "<datalist id='comm2'>";
     echo '</datalist>';
 
-
+    echo '<form action="">';
+    echo '<input type="hidden" name="page" value="acs-weather/includes/plugin_page.php">';
+ 
     echo ' <div class="form-group">';
-    echo '<div class="row">';
+    echo '<div class="row my-3">';
     echo '<div class="col-12 col-md-6">';
     echo '
     <div class="form-check">
-      <input class="form-check-input" type="checkbox" value="ressenti=\'yes\'" id="ressenti">
+      <input class="form-check-input" type="checkbox" name="ressenti" value="yes" id="ressenti">
       <label class="form-check-label" for="ressenti">
         Ressenti
       </label>
@@ -156,7 +158,7 @@ require_once  __DIR__ . '/../Models/Data.php';
 
     echo '
     <div class="form-check">
-      <input class="form-check-input" type="checkbox" value="tempmin=\'yes\'" id="tempmin">
+      <input class="form-check-input" type="checkbox" name="tempmin" value="yes" id="tempmin">
       <label class="form-check-label" for="tempmin">
         Température minimale
       </label>
@@ -164,7 +166,7 @@ require_once  __DIR__ . '/../Models/Data.php';
 
     echo '
     <div class="form-check">
-      <input class="form-check-input" type="checkbox" value="tempmax=\'yes\'" id="tempmax">
+      <input class="form-check-input" type="checkbox" name="tempmax" value="yes" id="tempmax">
       <label class="form-check-label" for="tempmax">
       Température maximale
       </label>
@@ -172,7 +174,7 @@ require_once  __DIR__ . '/../Models/Data.php';
 
     echo '
     <div class="form-check">
-      <input class="form-check-input" type="checkbox" value="humidite=\'yes\'" id="humidite">
+      <input class="form-check-input" type="checkbox" name="humidite" value="yes" id="humidite">
       <label class="form-check-label" for="humidite">
         Humidité
       </label>
@@ -183,7 +185,7 @@ require_once  __DIR__ . '/../Models/Data.php';
 
     echo '
     <div class="form-check">
-      <input class="form-check-input" type="checkbox" value="nebulosite=\'yes\'" id="nebulosite">
+      <input class="form-check-input" type="checkbox"  name="nebulosite" value="yes" id="nebulosite">
       <label class="form-check-label" for="nebulosite">
         Nébulosité
       </label>
@@ -191,7 +193,7 @@ require_once  __DIR__ . '/../Models/Data.php';
 
     echo '
     <div class="form-check">
-      <input class="form-check-input" type="checkbox" value="windspeed=\'yes\'" id="windspeed">
+      <input class="form-check-input" type="checkbox" name="vitessevent" value="yes" id="windspeed">
       <label class="form-check-label" for="windspeed">
       Vitesse du vent
       </label>
@@ -199,7 +201,7 @@ require_once  __DIR__ . '/../Models/Data.php';
 
     echo '
     <div class="form-check">
-      <input class="form-check-input" type="checkbox" value="visibility=\'yes\'" id="visibility">
+      <input class="form-check-input" type="checkbox" name="visibilite" value="yes" id="visibility">
       <label class="form-check-label" for="visibility">
       Visibilité moyenne
       </label>
@@ -207,7 +209,7 @@ require_once  __DIR__ . '/../Models/Data.php';
 
     echo '
     <div class="form-check">
-      <input class="form-check-input" type="checkbox" value="pop=\'yes\'" id="pop">
+      <input class="form-check-input" type="checkbox" name="pecipitation" value="yes" id="pop">
       <label class="form-check-label" for="pop">
       Précipitations
       </label>
@@ -216,8 +218,8 @@ require_once  __DIR__ . '/../Models/Data.php';
     echo '</div>';
     echo '</div>';
 
-    echo '<form action="">';
-    echo '<input type="hidden" name="page" value="acs-weather/includes/plugin_page.php">';
+   
+    
     echo '<input type="text" id="rendufinal" class="form-control" name="rendufinal" readonly>';
     echo '<button class="btn btn-primary id="save" name="savereglage">Sauvegarder les réglages</button>';
     echo '</form>';
@@ -391,7 +393,7 @@ require_once  __DIR__ . '/../Models/Data.php';
     //echo $_GET['rendufinal'];
     $rendunormalized = str_replace('\"', '"', $_GET['rendufinal']);
     //echo $rendunormalized;
-
+    die();
     $apikey->setMeteoArgs($rendunormalized);
   }
 
