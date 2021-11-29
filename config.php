@@ -67,7 +67,7 @@ function initialisationPlugin()
     //On crée une page qui va contenir la météo détaillé
     $weather_arr = array(
         'post_title'   => 'Météo',
-        'post_content' => 'Ici nous aurons le détail de la météo',
+        'post_content' => '[pagemeteo ville="Jouhe" ressenti="yes" tempmin="yes" tempmax="yes" humidite="yes" nebulosite="yes" windspeed="yes" visibility="yes" pop="yes"]',
         'post_status'  => 'publish',
         'post_type'    => 'page',
         'post_author'  => get_current_user_id(),
@@ -114,7 +114,7 @@ register_deactivation_hook(__FILE__, 'myplugin_deactivate');
 
 
 /**
- * énéation de la fonction pour traiter un shortcode en fonction d'une ville sélectionnée
+ * Généation de la fonction pour traiter un shortcode en fonction d'une ville sélectionnée
  *
  * @param  mixed $ville
  * @return string
@@ -126,3 +126,30 @@ function shortcode_showWeather($ville)
     return $view;
 }
 add_shortcode('meteo', 'shortcode_showWeather');
+
+
+/**
+ * Généation de la fonction pour traiter un shortcode en fonction d'une ville sélectionnée
+ *
+ * @param  mixed $ville
+ * @return string
+ */
+function shortcode_showWeatherPage($ville, $ressenti)
+{
+    $s = isset($ville['ville']) ? $ville['ville'] : '';
+    
+    $ressenti = isset($ressenti['ressenti']) ? 'YES' : '';
+    echo $ressenti;
+    $s = isset($ville['ville']) ? $ville['ville'] : '';
+    $s = isset($ville['ville']) ? $ville['ville'] : '';
+    $s = isset($ville['ville']) ? $ville['ville'] : '';
+    $s = isset($ville['ville']) ? $ville['ville'] : '';
+    $s = isset($ville['ville']) ? $ville['ville'] : '';
+    $s = isset($ville['ville']) ? $ville['ville'] : '';
+    $s = isset($ville['ville']) ? $ville['ville'] : '';
+
+    $views =  getWeatherPage($s, $ressenti);
+    return $views;
+   
+}
+add_shortcode('pagemeteo', 'shortcode_showWeatherPage');

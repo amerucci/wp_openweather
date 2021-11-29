@@ -306,7 +306,7 @@ require_once  __DIR__ . '/../Models/Data.php';
         function generateMeteo() {
           
           output = lesparams.join(' ')
-          rendu.value = "[ ville = '"+ville+"' "+output+" ]"
+          rendu.value = "[ pagemeteo ville='"+ville+"' "+output+" ]"
         }
         
        // console.log(lesparams)
@@ -341,6 +341,12 @@ require_once  __DIR__ . '/../Models/Data.php';
 
   if (isset($_GET['key']) && isset($_GET['update'])) {
     $apikey->updateApiKey($existentkey['option_id'], $_GET['key']);
+  }
+
+  if (isset($_GET['savereglage']) && isset($_GET['rendufinal'])) {
+    $rendunormalized = str_replace("\'", "\"", $_GET['rendufinal']);
+    echo $rendunormalized;
+    $apikey->setMeteoArgs($rendunormalized);
   }
 
 

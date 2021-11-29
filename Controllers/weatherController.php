@@ -14,3 +14,13 @@ function getWeather($atts)
     require(__DIR__ . "/../Views/weatherView.php");
     return $html;
 }
+
+function getWeatherPage($atts, $ressenti)
+{
+    $ressenti = $ressenti;
+    $data = new Data;
+    $datas = $data->getWeatherPageOf($atts);
+    require(__DIR__ . "/../Views/weatherView.php");
+    return $html;
+}
+
