@@ -7,8 +7,36 @@ require_once  __DIR__ . '/../Models/Data.php';
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.6.0/dist/umd/popper.min.js" integrity="sha384-KsvD1yqQ1/1+IA7gi3P0tyJcT3vR+NdBTt13hSJ2lnve8agRGXTTyNaBYmCR/Nwi" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.min.js" integrity="sha384-nsg8ua9HAw1y0W1btsyWgBklPnCUAFLuTMS2G72MMONqmOymq585AcH49TLBQObG" crossorigin="anonymous"></script>
 
+<style>
+  input[type=checkbox]:checked::before {
+    content: "" !important;
+    margin: -0.1875rem 0 0 -0.25rem;
+    height: 1.3125rem;
+    width: 1.3125rem;
+  }
+
+  .form-check .form-check-input {
+    float: none !important;
+  }
+
+  .btn-primary {
+    color: #fff;
+    background-color: #2271b1;
+    border-color: #2271b1;
+  }
+
+  .form-check-input:checked {
+    background-color: #2271b1;
+    border-color: #2271b1;
+  }
+</style>
 
 
+<?php
+
+// global $wpdb;
+// var_dump($wpdb);
+?>
 
 <div class="container">
 
@@ -96,33 +124,96 @@ require_once  __DIR__ . '/../Models/Data.php';
     ?>
   </div>
 
-    <!-- GESTION DE LA PAGE METEO -->
+  <!-- GESTION DE LA PAGE METEO -->
 
-    <div class="my-5 shadow p-3 mb-5 bg-white rounded">
+  <div class="my-5 shadow p-3 mb-5 bg-white rounded">
     <h2>Gestion de la page météo</h2>
+    <small id="passwordHelpBlock" class="form-text text-muted">
+      Pour pouvez ici gérer les options d'affichages de la page météo<br />
+      Pour commencer choisissez ci-dessus la ville sur laquelle vous souhaitez travailler.<br />
+
+    </small>
     <?php
     echo ' <div class="form-group">';
-    echo '<label for="cpselect"><strong>Code Postal</strong></label>';
-    echo '<input type="number" id="cpselect" name="commselected" class="form-control"/>';
-    echo '<label for="commselect"><strong>Choisir une ville</strong></label>';
-    echo '<input list="comm" id="commselect" name="commselected" class="form-control" readonly placeholder = "Selectionnez une ville"/>';
-    echo "<datalist id='comm'>";
-    echo '</datalist>';
+    echo '<div class="row">';
+    echo '<div class="col-12 col-md-6">';
+    echo '
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" value="ressenti=\'yes\'" id="ressenti">
+      <label class="form-check-label" for="ressenti">
+        Ressenti
+      </label>
+    </div>';
 
-    echo '<div class="input-group my-3">
-    <div class="input-group-prepend">
-      <div class="input-group-text">Shortcode</div>
-    </div>
-    <input type="text" class="form-control" id="generatedShortcode" readonly placeholder="Votre shortcode à copier">
-  </div>';
+    echo '
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" value="tempmin=\'yes\'" id="tempmin">
+      <label class="form-check-label" for="tempmin">
+        Température minimale
+      </label>
+    </div>';
 
+    echo '
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" value="tempmax=\'yes\'" id="tempmax">
+      <label class="form-check-label" for="tempmax">
+      Température maximale
+      </label>
+    </div>';
 
+    echo '
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" value="humidite=\'yes\'" id="humidite">
+      <label class="form-check-label" for="humidite">
+        Humidité
+      </label>
+    </div>';
 
-
-    echo "<div id='generatedShortcode'></div>";
     echo '</div>';
-    echo "<div class='d-flex align-items-center'>";
-    echo '<button class="btn btn-primary float-left" id="copy" title="" data-original-title="Copy to clipboard">Copier le Shortcode</button><div id="successtxt" class="px-3 "></div>';
+    echo '<div class="col-12 col-md-6">';
+
+    echo '
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" value="nebulosite=\'yes\'" id="nebulosite">
+      <label class="form-check-label" for="nebulosite">
+        Nébulosité
+      </label>
+    </div>';
+
+    echo '
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" value="windspeed=\'yes\'" id="windspeed">
+      <label class="form-check-label" for="windspeed">
+      Vitesse du vent
+      </label>
+    </div>';
+
+    echo '
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" value="visibility=\'yes\'" id="visibility">
+      <label class="form-check-label" for="visibility">
+      Visibilité moyenne
+      </label>
+    </div>';
+
+    echo '
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" value="pop=\'yes\'" id="pop">
+      <label class="form-check-label" for="pop">
+      Précipitations
+      </label>
+    </div>';
+
+    echo '</div>';
+    echo '</div>';
+
+    echo '<form action="">';
+    echo '<input type="hidden" name="page" value="acs-weather/includes/plugin_page.php">';
+    echo '<input type="text" id="rendufinal" class="form-control" name="rendufinal" readonly>';
+    echo '<button class="btn btn-primary id="save" name="savereglage">Sauvegarder les réglages</button>';
+    echo '</form>';
+ 
+
     echo "</div>";
     ?>
   </div>
@@ -130,12 +221,24 @@ require_once  __DIR__ . '/../Models/Data.php';
 
   <script>
     document.getElementById("commselect").addEventListener('change', generateSchortcode);
+    document.getElementById("commselect").addEventListener('change', generateVille);
     document.getElementById("cpselect").addEventListener('change', afficherLesCommunes);
 
     function generateSchortcode() {
       document.getElementById("generatedShortcode").value = '[meteo ville="' + this.value + '"]';
 
+
     }
+    let ville
+
+    
+    function generateVille() {
+      ville = this.value;
+      console.log(this.value)
+
+    }
+
+ 
 
     function copy() {
       var copyText = document.querySelector("#generatedShortcode");
@@ -145,35 +248,24 @@ require_once  __DIR__ . '/../Models/Data.php';
     }
 
     function afficherLesCommunes() {
-
-      var beforeSend = function() {
+      let beforeSend = function() {
         document.getElementById("commselect").value = "Chargement en cours"
       }
-
-
-
-
       let laliste = document.getElementById("comm")
-      laliste.innerHTML=""
+      laliste.innerHTML = ""
       document.getElementById("commselect").value = ""
       document.getElementById("generatedShortcode").value = ""
       document.getElementById("commselect").placeholder = "Selectionnez une ville"
       document.getElementById("commselect").removeAttribute('readonly');
-
       let communeSelected = document.getElementById("cpselect").value
       let xmlhttp = new XMLHttpRequest();
       xmlhttp.onreadystatechange = function() {
-
         if (xmlhttp.readyState < 4) {
           beforeSend();
         }
-
         if (this.readyState == 4 && this.status == 200) {
           document.getElementById("commselect").value = ""
-          var communess = JSON.parse(this.response)
-
-
-
+          let communess = JSON.parse(this.response)
           for (let i = 0; i < communess.length; i++) {
             console.log(communess[i][0])
             laliste.innerHTML += '<option class="form-control" value="' + communess[i].nom + '">'
@@ -181,37 +273,61 @@ require_once  __DIR__ . '/../Models/Data.php';
         }
       }
       xmlhttp.open("GET", "../wp-content/plugins/acs-weather/includes/search.php?cp=" + communeSelected)
-
       xmlhttp.send()
+    }
+    document.querySelector("#copy").addEventListener("click", copy);
+
+
+
+    //Gestion des paramètres d'affichage de la page météo
+
+    let lesparams = []
+    rendu = document.getElementById("rendufinal")
+    let inputs = document.querySelectorAll(".form-check-input");
+    for (let i = 0; i < inputs.length; i++) {
+      inputs[i].addEventListener('change', function() {
+
+        if (inputs[i].checked == true) {
+          lesparams.push(inputs[i].value);
+          generateMeteo()
+         
+        } else {
+          if(lesparams.indexOf(inputs[i].value) !== -1){
+            let position = lesparams.indexOf(inputs[i].value)
+            lesparams.splice(position,1)
+            generateMeteo()
+          }
+          else{
+            generateMeteo()
+          }
+          
+        }
+
+        function generateMeteo() {
+          
+          output = lesparams.join(' ')
+          rendu.value = "[ ville = '"+ville+"' "+output+" ]"
+        }
+        
+       // console.log(lesparams)
+
+      })
 
     }
 
-    document.querySelector("#copy").addEventListener("click", copy);
+
+
+
+
+
+
+
+
+    let params = [ressenti => "", min => "", max => "", humidite => "", nebulosite => "", vitesse => "", visibility => "", precipitation => ""]
   </script>
 
 
-  <!-- 
-<nav class="navbar navbar-expand-lg navbar-light my-4">
-  <div class="container-fluid">
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav">
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="admin.php?page=acs-weather/includes/plugin_page.php&home">Home</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="admin.php?page=acs-weather/includes/plugin_page.php&addmatch">Ajouter un match</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="admin.php?page=acs-weather/includes/plugin_page.php&classement">Voir le classement</a>
-        </li>
-      
-      </ul>
-    </div>
-  </div>
-</nav> -->
+
 
 
   <?php
@@ -228,14 +344,6 @@ require_once  __DIR__ . '/../Models/Data.php';
   }
 
 
-  if (isset($_GET['addmatch'])) {
-    //include('add_match.php');
-    echo "Vous êtes ici";
-  } else if (isset($_GET['classement'])) {
-    include('show_classement.php');
-  } else {
-    echo "Bienvenue";
-  }
 
 
   ?>

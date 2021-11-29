@@ -5,10 +5,10 @@ define( 'SHORTINIT', true );
 require( '../../../../wp-load.php' );
 
 
-$commune = $_GET["cp"];
+
 require_once  __DIR__ . '/../Models/Data.php';
 require_once  __DIR__ . '/../Models/Database.php';
-$commune = $_GET["cp"];
+
 
 if (isset($_GET['cp']) && !empty($_GET['cp'])) {
     $commune = $_GET['cp'];
