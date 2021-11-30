@@ -50,7 +50,7 @@ require_once  __DIR__ . '/../Models/Data.php';
     $existentkey = $apikey->getApiKey();
     $meteoArgs = $apikey->getMeteoArgs();
 
-    var_dump($meteoArgs);
+
 
 
 
@@ -129,6 +129,22 @@ require_once  __DIR__ . '/../Models/Data.php';
 
   <!-- GESTION DE LA PAGE METEO -->
 
+    <?php 
+
+ 
+
+
+    $ischecked_ressenti =($meteoArgs['ressenti']=="YES") ? 'checked' : '';
+    $ischecked_tempmin =($meteoArgs['tempmin']=="YES") ? 'checked' : '';
+    $ischecked_tempmax =($meteoArgs['tempmax']=="YES") ? 'checked' : '';
+    $ischecked_humidite =($meteoArgs['humidite']=="YES") ? 'checked' : '';
+    $ischecked_nebulosite =($meteoArgs['nebulosite']=="YES") ? 'checked' : '';
+    $ischecked_vitessevent =($meteoArgs['vitessevent']=="YES") ? 'checked' : '';
+    $ischecked_visibilite =($meteoArgs['visibilite']=="YES") ? 'checked' : '';
+    $ischecked_pecipitation =($meteoArgs['pecipitation']=="YES") ? 'checked' : '';
+    ?>
+
+
   <div class="my-5 shadow p-3 mb-5 bg-white rounded">
     <h2>Gestion de la page météo</h2>
     <small id="passwordHelpBlock" class="form-text text-muted">
@@ -153,7 +169,7 @@ require_once  __DIR__ . '/../Models/Data.php';
     echo '<div class="col-12 col-md-6">';
     echo '
     <div class="form-check">
-      <input class="form-check-input" type="checkbox" name="arguments[]" value="ressenti" id="ressenti">
+      <input class="form-check-input" type="checkbox" name="arguments[]" value="ressenti" id="ressenti" '.$ischecked_ressenti.'>
       <label class="form-check-label" for="ressenti">
         Ressenti
       </label>
@@ -161,7 +177,7 @@ require_once  __DIR__ . '/../Models/Data.php';
 
     echo '
     <div class="form-check">
-      <input class="form-check-input" type="checkbox" name="arguments[]" value="tempmin" id="tempmin">
+      <input class="form-check-input" type="checkbox" name="arguments[]" value="tempmin" id="tempmin" '.$ischecked_tempmin.'>
       <label class="form-check-label" for="tempmin">
         Température minimale
       </label>
@@ -169,7 +185,7 @@ require_once  __DIR__ . '/../Models/Data.php';
 
     echo '
     <div class="form-check">
-      <input class="form-check-input" type="checkbox" name="arguments[]" value="tempmax" id="tempmax">
+      <input class="form-check-input" type="checkbox" name="arguments[]" value="tempmax" id="tempmax" '.$ischecked_tempmax.'>
       <label class="form-check-label" for="tempmax">
       Température maximale
       </label>
@@ -177,7 +193,7 @@ require_once  __DIR__ . '/../Models/Data.php';
 
     echo '
     <div class="form-check">
-      <input class="form-check-input" type="checkbox" name="arguments[]" value="humidite" id="humidite">
+      <input class="form-check-input" type="checkbox" name="arguments[]" value="humidite" id="humidite" '.$ischecked_humidite.'>
       <label class="form-check-label" for="humidite">
         Humidité
       </label>
@@ -188,7 +204,7 @@ require_once  __DIR__ . '/../Models/Data.php';
 
     echo '
     <div class="form-check">
-      <input class="form-check-input" type="checkbox"  name="arguments[]" value="nebulosite" id="nebulosite">
+      <input class="form-check-input" type="checkbox"  name="arguments[]" value="nebulosite" id="nebulosite" '.$ischecked_nebulosite.'>
       <label class="form-check-label" for="nebulosite">
         Nébulosité
       </label>
@@ -196,7 +212,7 @@ require_once  __DIR__ . '/../Models/Data.php';
 
     echo '
     <div class="form-check">
-      <input class="form-check-input" type="checkbox" name="arguments[]" value="vitessevent" id="windspeed">
+      <input class="form-check-input" type="checkbox" name="arguments[]" value="vitessevent" id="windspeed" '.$ischecked_vitessevent.'>
       <label class="form-check-label" for="windspeed">
       Vitesse du vent
       </label>
@@ -204,7 +220,7 @@ require_once  __DIR__ . '/../Models/Data.php';
 
     echo '
     <div class="form-check">
-      <input class="form-check-input" type="checkbox" name="arguments[]" value="visibilite" id="visibility">
+      <input class="form-check-input" type="checkbox" name="arguments[]" value="visibilite" id="visibility" '.$ischecked_visibilite.'>
       <label class="form-check-label" for="visibility">
       Visibilité moyenne
       </label>
@@ -212,7 +228,7 @@ require_once  __DIR__ . '/../Models/Data.php';
 
     echo '
     <div class="form-check">
-      <input class="form-check-input" type="checkbox" name="arguments[]" value="pecipitation" id="pop">
+      <input class="form-check-input" type="checkbox" name="arguments[]" value="pecipitation" id="pop" '.$ischecked_pecipitation.' >
       <label class="form-check-label" for="pop">
       Précipitations
       </label>
@@ -222,8 +238,12 @@ require_once  __DIR__ . '/../Models/Data.php';
     echo '</div>';
 
    
-    
+    if ($meteoArgs == "") {
     echo '<input type="text" id="rendufinal" class="form-control" name="rendufinal" readonly>';
+    } else{
+      $selectedCity = $meteoArgs["shortcode"];
+      echo "<input type='text' id='rendufinal' class='form-control' name='rendufinal' value='".$selectedCity."' readonly>"; 
+    }
     
 
     if ($meteoArgs == "") {

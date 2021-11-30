@@ -52,18 +52,12 @@ class Data extends Database
                         }
                         $queryString .= $args[$i] . " = 'YES'" . $separator;
                 }
-                //echo $queryString;
-
                 $queryStringnotselected = "";
                 for ($j = 0; $j < count($argsnotselected); $j++) {
                         $separator = ($j < count($argsnotselected) - 1) ? $separator = ', ' : ' ';
                         $queryStringnotselected .= $argsnotselected[$j] . " = 'NO'" . $separator;
                        
                 }
-                //echo $queryStringnotselected;
-
-
-
                 $apik = $this->connect()->prepare('UPDATE weather SET shortcode = :string, ' . $queryString . ' ' . $queryStringnotselected . '');
                 $apik->bindParam(':string', $string);
                 $apik->debugDumpParams();
@@ -118,8 +112,6 @@ class Data extends Database
         public function updateApiKey($id, $valeur)
         {
                 global $wpdb;
-
-
                 $apik = $this->connect()->prepare('UPDATE ' . $wpdb->prefix . 'options SET option_value = :option_value WHERE option_id = :id');
                 $apik->bindParam(':id', $id);
                 $apik->bindParam(':option_value', $valeur);
@@ -165,7 +157,7 @@ class Data extends Database
         /**
          * Get des informations d'une ville selectionnée
          *
-         * @param  mixed $what
+         * @param  mixed $what Ville selectionnée
          * @return void
          */
         public function getWeatherOf($what)
@@ -177,7 +169,13 @@ class Data extends Database
                 $meteo = json_decode($meteo, true);
                 return $meteo;
         }
-
+        
+        /**
+         * Get des informations d'une ville selectionnée pour la page Météo
+         *
+         * @param  mixed $what Ville selectionnée
+         * @return void
+         */
         public function getWeatherPageOf($what)
         {
                 $key = $this->getApiKey();
@@ -186,14 +184,5 @@ class Data extends Database
                 curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
                 $meteo = curl_exec($curl);
                 return $meteo;
-        }
-
-
-        //https://api.openweathermap.org/data/2.5/forecast?callback=response&q=Paris&appid=a939b3a2c089cdc4dcefee3b74142319&units=metric&lang=fr
-
-
-        public function bonjour()
-        {
-                return "bonjour";
         }
 }
