@@ -6,11 +6,11 @@ require_once 'Database.php';
 class Data extends Database
 {
 
-        public function redir()
-        {
+        public function redir($url){
                 echo '<script language="JavaScript">
-                      setTimeout("window.location=./acs-weather/includes/plugin_page.php"); 
-                      </script>';
+                setTimeout("window.location=\''.$url.'\'"); 
+                </script>';
+               //../acs-weather/includes/plugin_page.php
         }
 
 
@@ -32,7 +32,7 @@ class Data extends Database
                 $apik->debugDumpParams();
 
                 $apik->execute();
-                $this->redir();
+                $this->redir('./admin.php?page=acs-weather%2Fincludes%2Fplugin_page.php');
         }
 
         public function updateMeteoArgs($string, $args)
@@ -69,7 +69,7 @@ class Data extends Database
                 $apik->debugDumpParams();
 
                 $apik->execute();
-                $this->redir();
+                $this->redir('./admin.php?page=acs-weather%2Fincludes%2Fplugin_page.php');
         }
 
 
@@ -104,7 +104,7 @@ class Data extends Database
                 $apik->bindParam(':option_value', $key);
                 $apik->execute();
                 //$apik->debugDumpParams();
-                $this->redir();
+                $this->redir('./admin.php?page=acs-weather%2Fincludes%2Fplugin_page.php');
         }
 
 
@@ -125,7 +125,7 @@ class Data extends Database
                 $apik->bindParam(':option_value', $valeur);
                 $apik->execute();
                 //$apik->debugDumpParams();
-                $this->redir();
+                $this->redir('./admin.php?page=acs-weather%2Fincludes%2Fplugin_page.php');
         }
 
         /**
