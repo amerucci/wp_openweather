@@ -13,31 +13,81 @@ class Data extends Database
                       </script>';
         }
 
-        
+
         /**
          * Enregistrement des informations concernant les données à afficher sur la page météo
          *
-         * @param  mixed $string
+         * @param  mixed $string, retourne le shortcode de la ville choisie
+         * @param  mixed $args[], array contenant tous les choix d'affichage
          * @return void
          */
         public function setMeteoArgs($string, $args)
         {
                 $arguments = implode(",", $args);
                 $bind = join(',', array_fill(0, count($args), '"YES"'));
-
-
-
-               
-
-
                 $apik = $this->connect()->prepare(
-                        'INSERT INTO weather (shortcode, '.$arguments.') VALUES (:string, '.$bind.')'
+                        'INSERT INTO weather (shortcode, ' . $arguments . ') VALUES (:string, ' . $bind . ')'
                 );
                 $apik->bindParam(':string', $string);
                 $apik->debugDumpParams();
-        
+
                 $apik->execute();
                 $this->redir();
+        }
+
+        public function updateMeteoArgs($string, $args)
+        {
+
+             
+                $allargs = ["ressenti", "tempmin", "tempmax", "humidite", "nebulosite", "vitessevent", "visibilite", "pecipitation"];
+                $argsnotselected = array_diff($allargs, $args);
+                $argsnotselected = array_values($argsnotselected);
+                $queryString = "";
+                for ($i = 0; $i < count($args); $i++) {
+                        if(count($args)==8){
+                                $separator = ($i < count($args) - 1) ? $separator = ', ' : ' ';   
+                        }
+                        else {
+                                $separator = ", ";
+                        }
+                        $queryString .= $args[$i] . " = 'YES'" . $separator;
+                }
+                //echo $queryString;
+
+                $queryStringnotselected = "";
+                for ($j = 0; $j < count($argsnotselected); $j++) {
+                        $separator = ($j < count($argsnotselected) - 1) ? $separator = ', ' : ' ';
+                        $queryStringnotselected .= $argsnotselected[$j] . " = 'NO'" . $separator;
+                       
+                }
+                //echo $queryStringnotselected;
+
+
+
+                $apik = $this->connect()->prepare('UPDATE weather SET shortcode = :string, ' . $queryString . ' ' . $queryStringnotselected . '');
+                $apik->bindParam(':string', $string);
+                $apik->debugDumpParams();
+
+                $apik->execute();
+                $this->redir();
+        }
+
+
+
+        /**
+         * Récupération des arguments pour la page météo
+         *
+         * @return array
+         */
+        public function getMeteoArgs()
+        {
+                $apik = $this->connect()->prepare(
+                        'SELECT * FROM weather'
+                );
+                $apik->execute();
+                //$apik->debugDumpParams();
+                $apikey = $apik->fetch();
+                return $apikey;
         }
 
         /**
@@ -121,7 +171,7 @@ class Data extends Database
         public function getWeatherOf($what)
         {
                 $key = $this->getApiKey();
-                $curl = curl_init("https://api.openweathermap.org/data/2.5/weather?q=" . $what . "&appid=".$key['option_value']."&lang=fr&units=metric");
+                $curl = curl_init("https://api.openweathermap.org/data/2.5/weather?q=" . $what . "&appid=" . $key['option_value'] . "&lang=fr&units=metric");
                 curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
                 $meteo = curl_exec($curl);
                 $meteo = json_decode($meteo, true);
@@ -131,7 +181,7 @@ class Data extends Database
         public function getWeatherPageOf($what)
         {
                 $key = $this->getApiKey();
-                $request = "https://api.openweathermap.org/data/2.5/forecast?callback=response&q=".$what."&appid=".$key['option_value']."&lang=fr&units=metric";
+                $request = "https://api.openweathermap.org/data/2.5/forecast?callback=response&q=" . $what . "&appid=" . $key['option_value'] . "&lang=fr&units=metric";
                 $curl = curl_init($request);
                 curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
                 $meteo = curl_exec($curl);
@@ -142,7 +192,8 @@ class Data extends Database
         //https://api.openweathermap.org/data/2.5/forecast?callback=response&q=Paris&appid=a939b3a2c089cdc4dcefee3b74142319&units=metric&lang=fr
 
 
-        public function bonjour(){
+        public function bonjour()
+        {
                 return "bonjour";
         }
 }

@@ -48,6 +48,9 @@ require_once  __DIR__ . '/../Models/Data.php';
 
     $apikey = new Data;
     $existentkey = $apikey->getApiKey();
+    $meteoArgs = $apikey->getMeteoArgs();
+
+    var_dump($meteoArgs);
 
 
 
@@ -221,7 +224,15 @@ require_once  __DIR__ . '/../Models/Data.php';
    
     
     echo '<input type="text" id="rendufinal" class="form-control" name="rendufinal" readonly>';
-    echo '<button class="btn btn-primary id="save" name="savereglage">Sauvegarder les réglages</button>';
+    
+
+    if ($meteoArgs == "") {
+      echo '<button class="btn btn-primary id="save" name="saveArgs">Sauvegarder les réglages</button>';
+    } else {
+      echo '<button class="btn btn-primary id="update" name="updateArgs">Merre à jour les réglages</button>';
+    }
+
+
     echo '</form>';
 
 
@@ -230,7 +241,7 @@ require_once  __DIR__ . '/../Models/Data.php';
   </div>
 
 
-<?php echo $path = plugin_dir_url( __DIR__ )   ?>
+<?php $path = plugin_dir_url( __DIR__ )   ?>
 
 
   <script>
@@ -340,43 +351,6 @@ require_once  __DIR__ . '/../Models/Data.php';
 
     document.querySelector("#copy").addEventListener("click", copy);
 
-
-
-    //Gestion des paramètres d'affichage de la page météo
-
-    let lesparams = []
-
-    //let inputs = document.querySelectorAll(".form-check-input");
-    // for (let i = 0; i < inputs.length; i++) {
-    //   inputs[i].addEventListener('change', function() {
-
-    //     if (inputs[i].checked == true) {
-    //       lesparams.push(inputs[i].value);
-    //       generateMeteo()
-
-    //     } else {
-    //       if(lesparams.indexOf(inputs[i].value) !== -1){
-    //         let position = lesparams.indexOf(inputs[i].value)
-    //         lesparams.splice(position,1)
-    //         generateMeteo()
-    //       }
-    //       else{
-    //         generateMeteo()
-    //       }
-
-    //     }
-
-    //     function generateMeteo() {
-
-    //       output = lesparams.join(' ')
-    //       rendu.value = "[pagemeteo ville='"+ville+"' "+output+"]"
-    //     }
-
-    //    // console.log(lesparams)
-
-    //   })
-
-    // }
   </script>
 
 
@@ -396,21 +370,16 @@ require_once  __DIR__ . '/../Models/Data.php';
     $apikey->updateApiKey($existentkey['option_id'], $_GET['key']);
   }
 
-  if (isset($_GET['savereglage']) && isset($_GET['rendufinal'])) {
-    //echo $_GET['rendufinal'];
+  if (isset($_GET['saveArgs']) && isset($_GET['rendufinal'])) {
     $rendunormalized = str_replace('\"', '"', $_GET['rendufinal']);
-    //echo $rendunormalized;
-
     $arguments = $_GET["arguments"];
-
-    echo "<b>Vous aimez </b><br />";
-    for ($i=0; $i<count($arguments); $i++) {
-        echo $arguments[$i]."<br />";
-    }
-
-
-   
     $apikey->setMeteoArgs($rendunormalized, $arguments);
+  }
+
+  if (isset($_GET['updateArgs']) && isset($_GET['rendufinal'])) {
+    $rendunormalized = str_replace('\"', '"', $_GET['rendufinal']);
+    $arguments = $_GET["arguments"];
+    $apikey->updateMeteoArgs($rendunormalized, $arguments);
   }
 
 
