@@ -230,7 +230,14 @@ require_once  __DIR__ . '/../Models/Data.php';
   </div>
 
 
+<?php echo $path = plugin_dir_url( __DIR__ )   ?>
+
+
   <script>
+    let ajaxPath = '<?=$path?>';
+    console.log(ajaxPath); 
+
+
     document.getElementById("commselect").addEventListener('change', generateSchortcode);
     document.getElementById("commselect").addEventListener('change', generateVille);
     document.getElementById("commselect2").addEventListener('change', generateVille2);
@@ -295,7 +302,7 @@ require_once  __DIR__ . '/../Models/Data.php';
           }
         }
       }
-      xmlhttp.open("GET", "../wp-content/plugins/acs-weather/includes/search.php?cp=" + communeSelected)
+      xmlhttp.open("GET", ajaxPath+"includes/search.php?cp=" + communeSelected)
       xmlhttp.send()
     }
 
@@ -326,7 +333,7 @@ require_once  __DIR__ . '/../Models/Data.php';
           }
         }
       }
-      xmlhttp.open("GET", "../wp-content/plugins/acs-weather/includes/search.php?cp=" + communeSelected)
+      xmlhttp.open("GET", ajaxPath+"includes/search.php?cp=" + communeSelected)
       xmlhttp.send()
     }
 
