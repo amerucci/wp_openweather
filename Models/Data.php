@@ -21,14 +21,15 @@ class Data extends Database
          * @param  mixed $args[], array contenant tous les choix d'affichage
          * @return void
          */
-        public function setMeteoArgs($string, $args)
+        public function setMeteoArgs($string, $args, $jsonimg)
         {
                 $arguments = implode(",", $args);
                 $bind = join(',', array_fill(0, count($args), '"YES"'));
                 $apik = $this->connect()->prepare(
-                        'INSERT INTO weather (shortcode, ' . $arguments . ') VALUES (:string, ' . $bind . ')'
+                        'INSERT INTO weather (shortcode, ' . $arguments . ', images) VALUES (:string, ' . $bind . ', :images)'
                 );
                 $apik->bindParam(':string', $string);
+                $apik->bindParam(':images', $jsonimg);
                 $apik->debugDumpParams();
 
                 $apik->execute();
@@ -65,7 +66,6 @@ class Data extends Database
            
                 $apik->execute();
                 //$apik->debugDumpParams();
-        die();
                 $this->redir('./admin.php?page=acs-weather%2Fincludes%2Fplugin_page.php');
         }
 

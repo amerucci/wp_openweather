@@ -59,7 +59,6 @@ require_once  __DIR__ . '/../Models/Data.php';
 
 
 
-
     echo '<form action="">';
     echo '<input type="hidden" name="page" value="acs-weather/includes/plugin_page.php">';
     echo ' <div class="form-group">';
@@ -136,7 +135,7 @@ require_once  __DIR__ . '/../Models/Data.php';
     <?php 
 
  
-
+if ($meteoArgs != "") {
 
     $ischecked_ressenti =($meteoArgs['ressenti']=="YES") ? 'checked' : '';
     $ischecked_tempmin =($meteoArgs['tempmin']=="YES") ? 'checked' : '';
@@ -146,6 +145,17 @@ require_once  __DIR__ . '/../Models/Data.php';
     $ischecked_vitessevent =($meteoArgs['vitessevent']=="YES") ? 'checked' : '';
     $ischecked_visibilite =($meteoArgs['visibilite']=="YES") ? 'checked' : '';
     $ischecked_pecipitation =($meteoArgs['pecipitation']=="YES") ? 'checked' : '';
+}
+else{
+  $ischecked_ressenti ="";
+  $ischecked_tempmin ="";
+  $ischecked_tempmax ="";
+  $ischecked_humidite ="";
+  $ischecked_nebulosite ="";
+  $ischecked_vitessevent ="";
+  $ischecked_visibilite ="";
+  $ischecked_pecipitation ="";
+}
     ?>
 
 
@@ -249,90 +259,28 @@ require_once  __DIR__ . '/../Models/Data.php';
       echo "<input type='text' id='rendufinal' class='form-control' name='rendufinal' value='".$selectedCity."' readonly>"; 
     }
     
+// Génération des champs pour la selection des images météo;
+  $imglabel = ["Ciel Clair", "Quelques nuages", "Nuages épars","Nuages","Pluie épars","Pluie","Orage","Neige","Brouillard"];
 
-  
-
-
-    echo '
-    <div class="input-group my-3">
+  echo '<label for=""><strong>Selectionnez des images météos</strong></label>';
+  for($ig =0; $ig<count($imglabel); $ig++){
+    if ($meteoArgs == "") {
+      $imgvalue = ""; 
+    }else{
+      $imgurl = json_decode($meteoArgs['images']);
+      $imgvalue = $imgurl[$ig]->imgurl;
+    }
+   
+    echo '<div class="input-group my-3">
     <div class="input-group-prepend">
-      <div class="input-group-text">Ciel Clair</div>
+      <div class="input-group-text">'.$imglabel[$ig].'</div>
     </div>
-    <input type="text" class="form-control" name="weatherimg[][clair]" value="">
+    <input type="text" class="form-control" name="weatherimg[][imgurl]" value="'.$imgvalue.'">
     </div>
     ';
+  }
 
-    echo '
-    <div class="input-group my-3">
-    <div class="input-group-prepend">
-      <div class="input-group-text">Quelques nuages</div>
-    </div>
-    <input type="text" class="form-control" name="weatherimg[][quelquesnuages]" value="">
-    </div>
-    ';
 
-    echo '
-    <div class="input-group my-3">
-    <div class="input-group-prepend">
-      <div class="input-group-text">Nuages épars</div>
-    </div>
-    <input type="text" class="form-control" name="weatherimg[][nuageepars]" value="">
-    </div>
-    ';
-
-    echo '
-    <div class="input-group my-3">
-    <div class="input-group-prepend">
-      <div class="input-group-text">Nuages</div>
-    </div>
-    <input type="text" class="form-control" name="weatherimg[][nuage]" value="">
-    </div>
-    ';
-
-    echo '
-    <div class="input-group my-3">
-    <div class="input-group-prepend">
-      <div class="input-group-text">Pluie épars</div>
-    </div>
-    <input type="text" class="form-control" name="weatherimg[][pluieepars]" value="">
-    </div>
-    ';
-
-    echo '
-    <div class="input-group my-3">
-    <div class="input-group-prepend">
-      <div class="input-group-text">Pluie</div>
-    </div>
-    <input type="text" class="form-control" name="weatherimg[][pluie]" value="">
-    </div>
-    ';
-
-    echo '
-    <div class="input-group my-3">
-    <div class="input-group-prepend">
-      <div class="input-group-text">Orage</div>
-    </div>
-    <input type="text" class="form-control" name="weatherimg[][orage]" value="">
-    </div>
-    ';
-
-    echo '
-    <div class="input-group my-3">
-    <div class="input-group-prepend">
-      <div class="input-group-text">Neige</div>
-    </div>
-    <input type="text" class="form-control" name="weatherimg[][neige]" value="">
-    </div>
-    ';
-
-    echo '
-    <div class="input-group my-3">
-    <div class="input-group-prepend">
-      <div class="input-group-text">Brouillard</div>
-    </div>
-    <input type="text" class="form-control" name="weatherimg[][brouillard]" value="">
-    </div>
-    ';
 
 
 
@@ -483,18 +431,15 @@ require_once  __DIR__ . '/../Models/Data.php';
 
   if (isset($_GET['saveArgs']) && isset($_GET['rendufinal'])) {
     $arguments = $_GET["arguments"];
-    $apikey->setMeteoArgs($_GET['rendufinal'], $arguments);
+    $imageciel = $_GET['weatherimg'];
+    $jsonimg = json_encode($imageciel, JSON_NUMERIC_CHECK);
+    $apikey->setMeteoArgs($_GET['rendufinal'], $arguments, $jsonimg);
   }
 
   if (isset($_GET['updateArgs']) && isset($_GET['rendufinal'])) {
 
     $imageciel = $_GET['weatherimg'];
     $jsonimg = json_encode($imageciel, JSON_NUMERIC_CHECK);
-    var_dump ($jsonimg);
-
-  
-
-  
     $arguments = $_GET["arguments"];
     $apikey->updateMeteoArgs($_GET['rendufinal'], $arguments, $jsonimg);
   }
