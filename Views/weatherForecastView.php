@@ -13,8 +13,19 @@ $datas = ($json->list);
 echo count($datas);
 
 foreach($datas as $data){
-  echo "<li>".$data->dt_txt."</li>";
-  echo "<li>".$data->wind->speed."km/h</li>";
+
+//var_dump($data->weather['0']->description);
+
+  echo "<li>";
+
+
+
+  echo '<img src="https://openweathermap.org/img/wn/' . $data->weather['0']->icon . '.png" alt="' . $data->weather['0']->description . '" title="' . $data->weather['0']->description . '"/>';
+  echo $data->weather['0']->description."<br/>";
+
+  $date = explode(" ", $data->dt_txt);
+  echo $dateNew = DateTime::createFromFormat('Y-m-d', $date[0])->format('d/m/Y')."<br/>";
+  echo "Vent : ".$data->wind->speed."km/h</li>";
 }
 
 
