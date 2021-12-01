@@ -29,6 +29,10 @@ require_once  __DIR__ . '/../Models/Data.php';
     background-color: #2271b1;
     border-color: #2271b1;
   }
+
+  .input-group-text{
+    min-width:150px;
+  }
 </style>
 
 
@@ -246,19 +250,106 @@ require_once  __DIR__ . '/../Models/Data.php';
     }
     
 
+  
+
+
+    echo '
+    <div class="input-group my-3">
+    <div class="input-group-prepend">
+      <div class="input-group-text">Ciel Clair</div>
+    </div>
+    <input type="text" class="form-control" name="weatherimg[][clair]" value="">
+    </div>
+    ';
+
+    echo '
+    <div class="input-group my-3">
+    <div class="input-group-prepend">
+      <div class="input-group-text">Quelques nuages</div>
+    </div>
+    <input type="text" class="form-control" name="weatherimg[][quelquesnuages]" value="">
+    </div>
+    ';
+
+    echo '
+    <div class="input-group my-3">
+    <div class="input-group-prepend">
+      <div class="input-group-text">Nuages épars</div>
+    </div>
+    <input type="text" class="form-control" name="weatherimg[][nuageepars]" value="">
+    </div>
+    ';
+
+    echo '
+    <div class="input-group my-3">
+    <div class="input-group-prepend">
+      <div class="input-group-text">Nuages</div>
+    </div>
+    <input type="text" class="form-control" name="weatherimg[][nuage]" value="">
+    </div>
+    ';
+
+    echo '
+    <div class="input-group my-3">
+    <div class="input-group-prepend">
+      <div class="input-group-text">Pluie épars</div>
+    </div>
+    <input type="text" class="form-control" name="weatherimg[][pluieepars]" value="">
+    </div>
+    ';
+
+    echo '
+    <div class="input-group my-3">
+    <div class="input-group-prepend">
+      <div class="input-group-text">Pluie</div>
+    </div>
+    <input type="text" class="form-control" name="weatherimg[][pluie]" value="">
+    </div>
+    ';
+
+    echo '
+    <div class="input-group my-3">
+    <div class="input-group-prepend">
+      <div class="input-group-text">Orage</div>
+    </div>
+    <input type="text" class="form-control" name="weatherimg[][orage]" value="">
+    </div>
+    ';
+
+    echo '
+    <div class="input-group my-3">
+    <div class="input-group-prepend">
+      <div class="input-group-text">Neige</div>
+    </div>
+    <input type="text" class="form-control" name="weatherimg[][neige]" value="">
+    </div>
+    ';
+
+    echo '
+    <div class="input-group my-3">
+    <div class="input-group-prepend">
+      <div class="input-group-text">Brouillard</div>
+    </div>
+    <input type="text" class="form-control" name="weatherimg[][brouillard]" value="">
+    </div>
+    ';
+
+
+
     if ($meteoArgs == "") {
       echo '<button class="btn btn-primary id="save" name="saveArgs">Sauvegarder les réglages</button>';
     } else {
       echo '<button class="btn btn-primary id="update" name="updateArgs">Merre à jour les réglages</button>';
     }
 
-
     echo '</form>';
 
 
     echo "</div>";
+
+    
     ?>
-  </div>
+
 
 
 <?php $path = plugin_dir_url( __DIR__ )   ?>
@@ -292,7 +383,7 @@ require_once  __DIR__ . '/../Models/Data.php';
     function generateVille2() {
       ville2 = this.value;
       rendu.value = 
-      rendu.value = '[pagemeteo ville="'+this.value+'"]'
+      rendu.value = this.value
 
     }
     
@@ -391,15 +482,21 @@ require_once  __DIR__ . '/../Models/Data.php';
   }
 
   if (isset($_GET['saveArgs']) && isset($_GET['rendufinal'])) {
-    $rendunormalized = str_replace('\"', '"', $_GET['rendufinal']);
     $arguments = $_GET["arguments"];
-    $apikey->setMeteoArgs($rendunormalized, $arguments);
+    $apikey->setMeteoArgs($_GET['rendufinal'], $arguments);
   }
 
   if (isset($_GET['updateArgs']) && isset($_GET['rendufinal'])) {
-    $rendunormalized = str_replace('\"', '"', $_GET['rendufinal']);
+
+    $imageciel = $_GET['weatherimg'];
+    $jsonimg = json_encode($imageciel, JSON_NUMERIC_CHECK);
+    var_dump ($jsonimg);
+
+  
+
+  
     $arguments = $_GET["arguments"];
-    $apikey->updateMeteoArgs($rendunormalized, $arguments);
+    $apikey->updateMeteoArgs($_GET['rendufinal'], $arguments, $jsonimg);
   }
 
 

@@ -35,7 +35,7 @@ class Data extends Database
                 $this->redir('./admin.php?page=acs-weather%2Fincludes%2Fplugin_page.php');
         }
 
-        public function updateMeteoArgs($string, $args)
+        public function updateMeteoArgs($string, $args, $images)
         {
 
              
@@ -58,11 +58,14 @@ class Data extends Database
                         $queryStringnotselected .= $argsnotselected[$j] . " = 'NO'" . $separator;
                        
                 }
-                $apik = $this->connect()->prepare('UPDATE weather SET shortcode = :string, ' . $queryString . ' ' . $queryStringnotselected . '');
+                $apik = $this->connect()->prepare('UPDATE weather SET shortcode = :string, ' . $queryString . ' ' . $queryStringnotselected . ', images = :images');
                 $apik->bindParam(':string', $string);
-                $apik->debugDumpParams();
-
+                $apik->bindParam(':images', $images);
+                
+           
                 $apik->execute();
+                //$apik->debugDumpParams();
+        die();
                 $this->redir('./admin.php?page=acs-weather%2Fincludes%2Fplugin_page.php');
         }
 
