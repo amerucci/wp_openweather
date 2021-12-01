@@ -1,22 +1,17 @@
-<?php ob_start();?>
+<?php ob_start(); ?>
 
 
   <?php
-  
+
   //var_dump($datas);
- 
-$img = $datas['weather'][0]['icon'];
-$imgdesc = $datas['weather'][0]['description'];
+
+  $img = $datas['weather'][0]['icon'];
+  $imgdesc = $datas['weather'][0]['description'];
 
 
-echo '<img src="https://openweathermap.org/img/wn/'.$img.'.png" alt="'.$imgdesc .'" title="'.$imgdesc .'"/>' ;  
-echo round($datas['main']['temp'])."°C";
-die();
-
-
-
-  
-  
+  echo '<img src="https://openweathermap.org/img/wn/' . $img . '.png" alt="' . $imgdesc . '" title="' . $imgdesc . '"/>';
+  echo round($datas['main']['temp']) . "°C";
+  die();
   ?>
 
   
@@ -24,6 +19,6 @@ die();
 
 
 
-    <?php 
-$html =  ob_get_clean();
-?>
+    <?php
+    $html =  ob_get_clean();
+    ?>

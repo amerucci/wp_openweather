@@ -75,7 +75,7 @@ function initialisationPlugin()
     //On crée une page qui va contenir la météo détaillé
     $weather_arr = array(
         'post_title'   => 'Météo',
-        'post_content' => '[pagemeteo ville="Jouhe" ressenti="yes" tempmin="yes" tempmax="yes" humidite="yes" nebulosite="yes" windspeed="yes" visibility="yes" pop="yes"]',
+        'post_content' => '[pagemeteo ville=""]',
         'post_status'  => 'publish',
         'post_type'    => 'page',
         'post_author'  => get_current_user_id(),

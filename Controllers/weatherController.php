@@ -20,7 +20,8 @@ function getWeatherPage($atts)
 
     $data = new Data;
     $datas = $data->getWeatherPageOf($atts);
-    require(__DIR__ . "/../Views/weatherView.php");
+    $config = $data->getMeteoArgs();
+    require(__DIR__ . "/../Views/weatherForecastView.php");
     return $html;
 }
 

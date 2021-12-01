@@ -177,7 +177,7 @@ class Data extends Database
          * Get des informations d'une ville selectionnée pour la page Météo
          *
          * @param  mixed $what Ville selectionnée
-         * @return void
+         * @return string
          */
         public function getWeatherPageOf($what)
         {
@@ -186,6 +186,13 @@ class Data extends Database
                 $curl = curl_init($request);
                 curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
                 $meteo = curl_exec($curl);
+
+                $meteo = str_replace('response(', '', $meteo);
+                $meteo = substr($meteo, 0, -1);
+
+                //var_dump($meteo);
+                $meteos = json_decode($meteo, true);
+                // echo getType($meteos);
                 return $meteo;
         }
 }
